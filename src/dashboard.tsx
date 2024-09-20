@@ -5,6 +5,7 @@ import ConnectButton from './ConnectButton';
 import { useAccount } from 'wagmi';
 import UploadComponent from './UploadComponent'
 import environmentSetup from './hedera';
+import { useDisconnect } from 'wagmi'
 // import { TokenCreateTransaction, TokenSupplyType } from '@hashgraph/sdk';
 // import createFirstNft from './CreateNFT';
 
@@ -14,6 +15,7 @@ const Dashboard: React.FC = () => {
     const [file, setFile] = React.useState<File | null>(null);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [hederaClient, setHederaClient] = React.useState<any>(null);
+    const { disconnect } = useDisconnect()
 
     useEffect(() => {
      const client =   environmentSetup()
@@ -63,6 +65,7 @@ const Dashboard: React.FC = () => {
                 :
                 <div>
                     <h2 className='text-center'>Welcome {address}</h2>
+                    <Button onClick={() => {localStorage.clear(); disconnect();}}>Disconnect</Button>
                     <div className='flex justify-center my-5'>
                         <UploadComponent />
                         <Button onClick={handleMint}>Mint</Button>
