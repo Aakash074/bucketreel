@@ -30,7 +30,8 @@ const uploadToPinata = async (file: File) => {
   }
 };
 
-const App: React.FC = () => { 
+//@ts-expect-error any
+const App: React.FC = ({ setFile }) => { 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = async (info: any) => {
     if (info.file.status !== 'uploading') {
@@ -39,7 +40,9 @@ const App: React.FC = () => {
     if (info.file.status === 'done') {
       try {
         const result = await uploadToPinata(info.file.originFileObj);
+        console.log(result.IpfsHash, result, "result")
         message.success(`File uploaded successfully: ${result.IpfsHash}`);
+        setFile(result.IpfsHash)
       } catch (error) {
         console.log(error)
         message.error('File upload failed.');

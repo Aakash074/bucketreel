@@ -6,8 +6,9 @@ import { useAccount } from 'wagmi';
 import UploadComponent from './UploadComponent'
 import environmentSetup from './hedera';
 import { useDisconnect } from 'wagmi'
-// import { TokenCreateTransaction, TokenSupplyType } from '@hashgraph/sdk';
+import { AccountCreateTransaction, Hbar } from '@hashgraph/sdk';
 // import createFirstNft from './CreateNFT';
+import { mintNFT } from "./CreateNFT";
 
 const Dashboard: React.FC = () => {
 
@@ -16,6 +17,41 @@ const Dashboard: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [hederaClient, setHederaClient] = React.useState<any>(null);
     const { disconnect } = useDisconnect()
+
+    const getOrCreateHederaAccount = async (address) => {
+        console.log(address)
+      try {
+        const accountPrivateKey = address;
+    
+        const response = await new AccountCreateTransaction()
+          .setInitialBalance(new Hbar(1)) // Set initial balance to 5 Hbar
+          .setKey(address)
+          .execute(hederaClient);
+        
+        const receipt = await response.getReceipt(hederaClient);
+        
+        // Store accountId and privateKey as a JSON string in local storage
+        const accountData = {
+          accountId: receipt.accountId.toString(),
+          accountPvtKey: accountPrivateKey.toString(), // Convert to string for storage
+        };
+        
+        localStorage.setItem('hederaAccountData', JSON.stringify(accountData));
+        
+        return accountData; // Return the account data
+      } catch (error) {
+        console.error("Error creating Hedera account:", error);
+        throw error; // Optional: propagate the error for further handling
+      }
+    };
+
+    useEffect(() => {
+      async function createAcc() {
+      const accountData = await getOrCreateHederaAccount(address);
+        console.log("Account Data:", accountData);
+    }
+    createAcc()
+    }, [address])
 
     useEffect(() => {
      const client =   environmentSetup()
@@ -29,45 +65,42 @@ const Dashboard: React.FC = () => {
     ];
 
     const handleMint = async () => {
-//        //Create the NFT
-// const nftCreate = await new TokenCreateTransaction()
-// .setTokenName("diploma")
-// .setTokenSymbol("GRAD")
-// .setTokenType(TokenType.NonFungibleUnique)
-// .setDecimals(0)
-// .setInitialSupply(0)
-// .setTreasuryAccountId("0xdae3D2b11bB7F68946cbE14493612afF6f9f8E86")
-// .setSupplyType(TokenSupplyType.Finite)
-// .setMaxSupply(250)
-// .setSupplyKey(supplyKey)
-// .freezeWith(hederaClient);
-
-// //Sign the transaction with the treasury key
-// const nftCreateTxSign = await nftCreate.sign(treasuryKey);
-
-// //Submit the transaction to a Hedera network
-// const nftCreateSubmit = await nftCreateTxSign.execute(client);
-
-// //Get the transaction receipt
-// const nftCreateRx = await nftCreateSubmit.getReceipt(client);
-
-// //Get the token ID
-// const tokenId = nftCreateRx.tokenId;
-
-// //Log the token ID
-// console.log("Created NFT with Token ID: " + tokenId);
-// createFirstNft()
+        console.log(file, "file")
+        const ipfsHash = file; // From Pinata
+        const coordinates = { lat: 12.34, lon: 56.78 };
+        const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'))
+        const locationName = 'XYZ'; // User-provided location name
+        
+        mintNFT(ipfsHash, coordinates, userAccount, locationName)
+          .then(() => console.log("NFT minting process completed."))
+          .catch(err => console.error("Error minting NFT:", err));
     }
+
+    //@ts-expect-error any
+    function showFirstAndLast(str) {
+        if (str.length <= 8) {
+          // If the string is too short to have both first 5 and last 3 characters, return the original string
+          return str;
+        }
+      
+        const firstSix = str.slice(0, 6);  // First 6 characters
+        const lastFour = str.slice(-4);    // Last 4 characters
+      
+        return firstSix + '...' + lastFour;  // Return in desired format
+      }
 
     return (
         <div>
-            {!address ? <ConnectButton />
+            {!address ? <div className='w-screen flex justify-center items-center'><ConnectButton /></div>
                 :
-                <div>
-                    <h2 className='text-center'>Welcome {address}</h2>
-                    <Button onClick={() => {localStorage.clear(); disconnect();}}>Disconnect</Button>
+                <div className='w-screen'>
+                    <div className='flex flex-row justify-between w-full'>
+                    <h2 className=''> Welcome ${showFirstAndLast(address)}</h2>
+                    <Button onClick={() => {localStorage.clear(); disconnect();}}>Logout / Disconnect</Button>
+                    </div>
                     <div className='flex justify-center my-5'>
-                        <UploadComponent />
+                        {/* @ts-expect-error any */}
+                        <UploadComponent setFile={setFile} />
                         <Button onClick={handleMint}>Mint</Button>
                     </div>
                     <div className='flex flex-col justify-center items-center gap-4'>
