@@ -123,7 +123,7 @@ const BucketList = () => {
       {/* @ts-ignore */}
         {nfts.filter(nft => nft.metadata && nft.metadata?.attributes?.[0]?.trait_type).map(nft => (
             // @ts-ignore
-          <Card key={nft.tokenInfo?.token_id} className="nft-card flex justify-center items-center m-2 bg-[#f2f2f27d] w-[320px]">
+          <Card key={nft.tokenInfo?.token_id} className="nft-card flex justify-center items-center m-2 bg-violet-100 w-[320px]">
             {/* @ts-ignore */}
             <img src={`https://peach-accused-eel-595.mypinata.cloud/ipfs/${nft.metadata?.image?.split('ipfs://')[1]}`} alt={nft.metadata?.name} className='rounded-md' style={{ width: '100%' }} />
             <div className='flex flex-row justify-between items-center pt-4 w-full gap-2'>

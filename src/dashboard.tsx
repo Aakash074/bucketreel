@@ -168,25 +168,25 @@ const Dashboard: React.FC = () => {
       }
 
     return (
-        <div>
+        <div className='bg-purple-50'>
           {address && <div className='flex flex-row fixed bottom-[20px] w-full justify-center items-center z-10'>
-            <div className={`flex flex-row  w-[80%] max-w-[400px] rounded-lg justify-evenly overflow-hidden cursor-pointer text-center`}>
-                    <div className={`text-2xl ${tab === "home" ? "bg-sky-600 text-white" : "bg-[#e2e2e2]"} w-[50%] h-full p-2`} onClick={() => setTab("home")}>Explore</div>
-                    <div className={`text-2xl ${tab === "bucket" ? "bg-sky-600 text-white" : "bg-[#e2e2e2]"} w-[50%] h-full p-2`}  onClick={() => setTab("bucket")}>Bucketlist</div>
+            <div className={`flex flex-row  w-[80%] max-w-[400px] rounded-lg justify-evenly overflow-hidden cursor-pointer text-center border-[1px] border-violet-600`}>
+                    <div className={`text-2xl ${tab === "home" ? "bg-violet-600 text-white" : "bg-white text-violet-600"} w-[50%] h-full p-2`} onClick={() => setTab("home")}>Explore</div>
+                    <div className={`text-2xl ${tab === "bucket" ? "bg-violet-600 text-white" : "bg-white text-violet-600"} w-[50%] h-full p-2`}  onClick={() => setTab("bucket")}>Bucketlist</div>
                     </div>
                   </div>}
                   <ToastContainer />
-            {!address ? <div className='w-screen flex justify-center items-center'><ConnectButton /></div>
+            {!address ? <div className='w-screen flex justify-center items-center bg-purple-50'><ConnectButton /></div>
                 :
-                <div className='w-screen h-screen flex flex-col justify-start'>
-                  
+                <div className='w-screen h-screen flex flex-col justify-start bg-purple-50'>
+                  <div className='text-xl font-bold w-full text-center pt-4'>BucketReel</div>
                     <div className='flex flex-row justify-between items-center w-full p-4'>
-                    <h2 className=''> Welcome { //@ts-ignore
+                    <h2 className='font-bold'> Welcome { //@ts-ignore
                           JSON.parse(localStorage.getItem('hederaAccountData'))?.accountId
 
                     // showFirstAndLast(address)
                     }</h2>
-                    <Button onClick={() => {localStorage.clear(); disconnect();}}>Logout / Disconnect</Button>
+                    <Button className='border-[1px] border-violet-600' onClick={() => {localStorage.clear(); disconnect();}}>Logout / Disconnect</Button>
                     </div>
                     <div className='flex flex-col justify-center mx-5 '>
                         {/* @ts-ignore */}
@@ -196,7 +196,7 @@ const Dashboard: React.FC = () => {
                             <Button onClick={handleMint}>Mint</Button>
                         </div>}
                     </div>
-                    <div className='flex flex-col justify-center items-center gap-4'>
+                    <div className='flex flex-col justify-center items-center gap-4 bg-purple-50'>
                         {tab === "home" ? <NFTDisplay /> : <BucketList />}
                         {/* {images.map((image, index) => (
                             <Card key={index} style={{ width: 300 }}>

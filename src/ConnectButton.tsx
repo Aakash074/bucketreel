@@ -67,9 +67,11 @@ export default function ConnectButton() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen bg-purple-50 items-center justify-center">
     <img src={LogoUrl} alt="bucketreel" className="w-[360px]" />
-    <Button onClick={handleConnect}>Login / Connect Wallet</Button>
+    <div className="w-full text-center text-2xl p-2">Influencer-Inspired Travel</div>
+    <div className="w-full text-center text-xl p-2">Powered by Web3</div>
+    <Button size="middle" className="text-violet-600 text-lg p-2 m-2 border-[1px] border-violet-600" onClick={handleConnect}>Login / Connect Wallet</Button>
     </div>
   );
 }
