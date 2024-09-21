@@ -121,7 +121,7 @@ const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
 
   const mdJson = {
     "name": tokenName,
-    "description": tokenName + "minting is done",
+    "description": tokenName + " minting is done",
     "image": "ipfs://" + ipfsHash,
     "attributes": [
           { trait_type: "Latitude", value: coordinates?.lat },

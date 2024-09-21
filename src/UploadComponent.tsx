@@ -68,7 +68,7 @@ const App: React.FC = ({ setFile }) => {
 
   return (
     <Upload {...props}>
-      <Button icon={<UploadOutlined />}>Click to Upload</Button>
+      <Button icon={<UploadOutlined />}>Add Content</Button>
     </Upload>
   );
 };
