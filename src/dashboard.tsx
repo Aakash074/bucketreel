@@ -6,11 +6,18 @@ import { useAccount } from 'wagmi';
 import UploadComponent from './UploadComponent'
 import environmentSetup from './hedera';
 import { useDisconnect } from 'wagmi'
-import { AccountCreateTransaction, Hbar } from '@hashgraph/sdk';
+import { AccountCreateTransaction, Hbar,  Client, TopicMessageQuery, TopicId, PrivateKey } from '@hashgraph/sdk';
 // import createFirstNft from './CreateNFT';
 import { mintNFT } from "./CreateNFT";
 import NFTDisplay from "./displayNFTs";
 import BucketList from './bucketlist';
+import { Buffer } from "buffer";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';  // Import toastify CSS
+
+window.Buffer = window.Buffer || Buffer;
+
+const topicId = "0.0.4887959"
 
 const Dashboard: React.FC = () => {
 
@@ -24,6 +31,44 @@ const Dashboard: React.FC = () => {
 
     const [location, setLocation] = React.useState({ lat: 12.34, lon: 56.78 });
     const [tab, setTab] = React.useState("home")
+    const [accountData, setAccountData] = React.useState()
+
+    useEffect(() => {
+      if(accountData) {
+      const client = Client.forTestnet();  // Or Client.forMainnet() if using Mainnet
+      //@ts-ignore
+      client.setOperator(accountData?.accountId, PrivateKey.fromStringDer(accountData?.accountPvtKey));
+    
+      
+      // Replace this with your actual topic ID
+      const topic = TopicId.fromString(topicId);
+  
+      const subscription = new TopicMessageQuery()
+        .setTopicId(topic)
+        .subscribe(client, null, (message) => { //@ts-ignore
+          const messageAsString = Buffer.from(message.contents, "utf8").toString();
+          const timestamp = message.consensusTimestamp.toDate().toLocaleString();
+  
+          // Display the message as a toast notification
+          toast.info(`${timestamp}: ${messageAsString}`, {
+            position: 'top-center',
+            autoClose: 3000,  // Toast will disappear after 3 seconds
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true
+          });
+        });
+
+      }
+  
+      // Cleanup the subscription on component unmount
+      return () => {
+        // unsubscribe();
+      };
+    }, [topicId, accountData]);
+  
+  
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -64,6 +109,8 @@ const Dashboard: React.FC = () => {
           accountId: receipt.accountId.toString(),
           accountPvtKey: accountPrivateKey.toString(), // Convert to string for storage
         };
+//@ts-ignore
+        setAccountData(accountData)
         
         localStorage.setItem('hederaAccountData', JSON.stringify(accountData));
         
@@ -122,17 +169,18 @@ const Dashboard: React.FC = () => {
 
     return (
         <div>
-          {address && <div className='flex flex-row fixed bottom-[10px] w-full justify-center items-center z-10'>
+          {address && <div className='flex flex-row fixed bottom-[20px] w-full justify-center items-center z-10'>
             <div className={`flex flex-row  w-[80%] max-w-[400px] rounded-lg justify-evenly overflow-hidden cursor-pointer text-center`}>
                     <div className={`text-2xl ${tab === "home" ? "bg-sky-600 text-white" : "bg-[#e2e2e2]"} w-[50%] h-full p-2`} onClick={() => setTab("home")}>Explore</div>
                     <div className={`text-2xl ${tab === "bucket" ? "bg-sky-600 text-white" : "bg-[#e2e2e2]"} w-[50%] h-full p-2`}  onClick={() => setTab("bucket")}>Bucketlist</div>
                     </div>
                   </div>}
+                  <ToastContainer />
             {!address ? <div className='w-screen flex justify-center items-center'><ConnectButton /></div>
                 :
                 <div className='w-screen h-screen flex flex-col justify-start'>
                   
-                    <div className='flex flex-row justify-between w-full p-4'>
+                    <div className='flex flex-row justify-between items-center w-full p-4'>
                     <h2 className=''> Welcome { //@ts-ignore
                           JSON.parse(localStorage.getItem('hederaAccountData'))?.accountId
 

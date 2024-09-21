@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { fetchMintedNFTs } from './fetchNFTs'; // Import the function to fetch NFTs
 import { Button, Card } from 'antd'
-import { Client, ContractExecuteTransaction, ContractFunctionParameters, PrivateKey } from "@hashgraph/sdk";
+import { Client, ContractExecuteTransaction, ContractFunctionParameters, PrivateKey, TopicMessageSubmitTransaction } from "@hashgraph/sdk";
 
 const contractId = "0.0.4887459"
+const topicId = "0.0.4887959"
 
 const NFTDisplay = () => {
   const [nfts, setNfts] = useState([]);
@@ -24,7 +25,7 @@ const NFTDisplay = () => {
   // Function to handle "like" button click 
   //@ts-ignore
   async function addToBucketList(nftId) {
-    console.log(nftId);
+    console.log(nftId?.token_id);
     const client = Client.forTestnet(); //@ts-ignore
     const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'));
     client.setOperator(userAccount?.accountId, PrivateKey.fromStringDer(userAccount?.accountPvtKey));
@@ -32,11 +33,20 @@ const NFTDisplay = () => {
     const transaction = new ContractExecuteTransaction()
         .setContractId(contractId)
         .setGas(100_000) // Set gas limit appropriately
-        .setFunction("addToBucketList", new ContractFunctionParameters().addString(nftId)); // Use addString instead of addUint256
+        .setFunction("addToBucketList", new ContractFunctionParameters().addString(nftId?.token_id)); // Use addString instead of addUint256
 
     const txResponse = await transaction.execute(client);
     const receipt = await txResponse.getReceipt(client);
     console.log(`Transaction status: ${receipt.status}`);
+    const sendResponse = await new TopicMessageSubmitTransaction({
+      topicId: topicId,
+      message: `${nftId?.metadata?.name} (${nftId?.token_id}) is added to bucketlist`,
+    }).execute(client);
+    const getReceipt = await sendResponse.getReceipt(client);
+
+// Get the status of the transaction
+const transactionStatus = getReceipt.status
+console.log("The message transaction status " + transactionStatus.toString())
 }
 
   return (
@@ -58,7 +68,7 @@ const NFTDisplay = () => {
             </div>
             <div className='w-[40%] flex flex-row-reverse'>
             {/* @ts-ignore */}
-            <Button onClick={() => addToBucketList(nft?.token_id)}>
+            <Button onClick={() => addToBucketList(nft)}>
             {/* @ts-ignore */}
               Add to Bucket
             </Button>

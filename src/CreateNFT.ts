@@ -9,8 +9,11 @@ import {
   TokenType,
   TokenSupplyType,
   AccountId,
+  TopicMessageSubmitTransaction,
 } from "@hashgraph/sdk";
 import axios from 'axios'; // You will need axios to handle the file upload manually
+
+const topicId = "0.0.4887959"
 
 // Initialize Hedera client
 const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
@@ -194,6 +197,15 @@ const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
   const associateSubmit = await associateTxSigned.execute(client);
   const associateReceipt = await associateSubmit.getReceipt(client);
   console.log(`NFT Associated with User Account: ${userAccount.accountId}`, associateReceipt);
+  const sendResponse = await new TopicMessageSubmitTransaction({
+    topicId: topicId,
+    message: `${tokenName} (${tokenId}) is explored and minted.`,
+  }).execute(client);
+  const getReceipt = await sendResponse.getReceipt(client);
+
+// Get the status of the transaction
+const transactionStatus = getReceipt.status
+console.log("The message transaction status " + transactionStatus.toString())
   window.location.reload()
 };
 
