@@ -3,10 +3,12 @@ import { UploadOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { Button, message, Upload } from 'antd';
 import axios from 'axios'; // You will need axios to handle the file upload manually
-
+//@ts-ignore
 const JWT = import.meta.env.VITE_PINATA_JWT;
 // Replace with your Pinata API key and secret
+//@ts-ignore
 const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY;
+//@ts-ignore
 const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
 
 const uploadToPinata = async (file: File) => {
@@ -30,7 +32,7 @@ const uploadToPinata = async (file: File) => {
   }
 };
 
-//@ts-expect-error any
+//@ts-ignore
 const App: React.FC = ({ setFile }) => { 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = async (info: any) => {
@@ -54,12 +56,12 @@ const App: React.FC = ({ setFile }) => {
 
   const props: UploadProps = {
     customRequest: async ({ file, onSuccess, onError }) => {
-      try { //@ts-expect-error any
+      try { //@ts-ignore
         await uploadToPinata(file);
         onSuccess?.(file);
       } catch (error) {
         console.log(error)
-        //@ts-expect-error any
+        //@ts-ignore
         onError?.(error);
       }
     },

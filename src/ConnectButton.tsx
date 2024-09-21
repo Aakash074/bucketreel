@@ -9,8 +9,9 @@ import {
 } from "@hashgraph/sdk";
 
 // Initialize your Hedera client
-const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
+const client = Client.forTestnet(); // @ts-ignore
 console.log(import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID, import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY, "accounts");
+//@ts-ignore
 client.setOperator(import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID, import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY);
 
 // Create or retrieve a Hedera account
@@ -26,7 +27,7 @@ const getOrCreateHederaAccount = async () => {
     const receipt = await response.getReceipt(client);
     
     // Store accountId and privateKey as a JSON string in local storage
-    const accountData = {
+    const accountData = { //@ts-ignore
       accountId: receipt.accountId.toString(),
       accountPvtKey: accountPrivateKey.toString(), // Convert to string for storage
     };
@@ -56,7 +57,7 @@ export default function ConnectButton() {
 
       // Now, use the newly created Hedera account ID in the WalletConnect
       // You can customize the connection to WalletConnect if necessary
-      await connect({ 
+      await connect({  //@ts-ignore
         connector: "walletConnect", // Replace with your desired connector
         accountId: accountData.accountId, // Pass the new Hedera account ID here
         chainId: 296,

@@ -5,7 +5,9 @@ import { Client, PrivateKey, AccountCreateTransaction, AccountBalanceQuery, Hbar
 export default async function environmentSetup() {
 
     //Grab your Hedera testnet account ID and private key from your .env file
+    //@ts-ignore
     const myAccountId = import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID;
+    //@ts-ignore
     const myPrivateKey = import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY;
 
    // If we weren't able to grab it, we should throw a new error

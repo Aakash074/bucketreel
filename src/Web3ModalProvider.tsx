@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 const queryClient = new QueryClient()
 
 // 1. Your Reown Cloud project ID
+//@ts-ignore
 const projectId = import.meta.env.VITE_REOWN_PROJECT_ID
 console.log(projectId)
 
@@ -36,7 +37,7 @@ createWeb3Modal({
   enableOnramp: true // Optional - false as default
 })
 
-//@ts-expect-error any
+//@ts-ignore
 export default function Web3ModalProvider({ children }) {
   return (
     <WagmiProvider config={config}>

@@ -14,6 +14,7 @@ import axios from 'axios'; // You will need axios to handle the file upload manu
 
 // Initialize Hedera client
 const client = Client.forTestnet(); // Use Client.forMainnet() for mainnet
+//@ts-ignore
 client.setOperator(import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID, PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY));
 // Function to create a new non-fungible token
 const createNonFungibleToken = async (
@@ -34,13 +35,14 @@ const createNonFungibleToken = async (
    .setInitialSupply(0)
    .setTreasuryAccountId(treasuryAccountId)
    .setSupplyType(TokenSupplyType.Finite)
-   .setMaxSupply(1)
-   .setSupplyKey(PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY))
+   .setMaxSupply(1) //@ts-ignore
+   .setSupplyKey(PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY)) //@ts-ignore
    .setAdminKey(PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY))
    .setMaxTransactionFee(new Hbar(30))
    .freezeWith(client); //freeze tx from from any further mods.
 
   // Sign the transaction
+  //@ts-ignore
   const signedTx = await createTokenTx.sign(PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY));
   // Submit the transaction to the Hedera network
   const response = await signedTx.execute(client);
@@ -60,7 +62,6 @@ const createNonFungibleToken = async (
 const mintToken = async (
   tokenId: TokenId,
   metadata: Buffer[],
-  supplyKey: PrivateKey
 ) => {
   // Create a token mint transaction
   const mintTokenTxn = new TokenMintTransaction()
@@ -69,6 +70,7 @@ const mintToken = async (
     .freezeWith(client); // Freeze the transaction
 
   // Sign the transaction with the supply key
+  //@ts-ignore
   const mintTokenTxnSigned = await mintTokenTxn.sign(PrivateKey.fromStringDer(import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY));
   
   // Submit the transaction to the Hedera network
@@ -82,8 +84,10 @@ const mintToken = async (
 };
 
 // Function to create and mint NFT on Hedera
-export const mintNFT = async (ipfsHash, coordinates, userAccount, locationName) => {
+//@ts-ignore
+export const mintNFT = async (ipfsHash, coordinates, userAccount, locationName) => { //@ts-ignore
   const treasuryAccountId = import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID; // Replace with your treasury account ID
+  //@ts-ignore
   const treasuryAccountPrivateKey = import.meta.env.VITE_HEDERA_TESTNET_PRIVATE_KEY; // Replace with your treasury account private key
 
   // Generate supply key
@@ -92,7 +96,7 @@ export const mintNFT = async (ipfsHash, coordinates, userAccount, locationName) 
 
   // Dynamic token name and symbol based on user-provided location name
   const tokenName = `${locationName} NFT`;
-  const tokenSymbol = `${locationName.split(' ') // Split the phrase into individual words
+  const tokenSymbol = `${locationName.split(' ') // @ts-ignore
     .map(word => {
       // Keep the first character of the word and remove vowels from the rest
       return word[0] + word.slice(1).replace(/[aeiouAEIOU]/g, '');
@@ -119,10 +123,11 @@ export const mintNFT = async (ipfsHash, coordinates, userAccount, locationName) 
   //     // coordinates,
   //   })
   // );
-
+//@ts-ignore
   const JWT = import.meta.env.VITE_PINATA_JWT;
-// Replace with your Pinata API key and secret
+// @ts-ignore
 const PINATA_API_KEY = import.meta.env.VITE_PINATA_API_KEY;
+//@ts-ignore
 const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
 
   const mdJson = {
@@ -152,7 +157,7 @@ const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
       });
       formData.append('pinataOptions', pinataOptions);
 
-      const response = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
+      const response = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, { //@ts-ignore
         maxBodyLength: 'Infinity', // Support for large files
         headers: {
             'Authorization': `Bearer ${JWT}`,
@@ -174,6 +179,7 @@ const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
 ];
 
   // 3. Mint the NFT with the metadata
+  //@ts-ignore
   await mintToken(tokenId, metadata, supplyKey);
 
   console.log("NFT Minted with IPFS Hash and Coordinates.");

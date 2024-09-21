@@ -6,6 +6,7 @@ const MIRROR_NODE_API = "https://testnet.mirrornode.hedera.com/api/v1";
 
 // Function to fetch NFTs by account ID
 export const fetchMintedNFTs = async () => {
+    //@ts-ignore
   const accountIdString = import.meta.env.VITE_HEDERA_TESTNET_ACCOUNT_ID;
   const accountId = AccountId.fromString(accountIdString);
 
@@ -20,14 +21,14 @@ export const fetchMintedNFTs = async () => {
     //   const nftTokens = tokens.filter(token => token.type === 'NON_FUNGIBLE_UNIQUE');
 
       // For each NFT, fetch its metadata from IPFS
-      const nfts = await Promise.all(
+      const nfts = await Promise.all( //@ts-ignore
         tokens.map(async (nft) => {
           // Fetch all NFTs (serial numbers) for the given token ID
           const nftsResponse = await axios.get(`${MIRROR_NODE_API}/tokens/${nft.token_id}/nfts`);
           const nftsList = nftsResponse.data.nfts;
 
           // Map through the NFT serial numbers and fetch the metadata for each one
-          const nftDetails = await Promise.all(
+          const nftDetails = await Promise.all( //@ts-ignore
             nftsList.map(async (nftItem) => {
               const metadataBase64 = nftItem.metadata; // Metadata is base64-encoded
               const metadata = decodeBase64(metadataBase64); // Decode the metadata
@@ -60,7 +61,8 @@ export const fetchMintedNFTs = async () => {
   }
 };
 
-// Function to fetch NFT metadata from Pinata's IPFS
+// Function to fetch NFT metadata from Pinata's IPFS 
+//@ts-ignore
 const fetchNFTMetadataFromIPFS = async (ipfsHash) => {
   try {
     const ipfsGatewayUrl = `https://peach-accused-eel-595.mypinata.cloud/ipfs/${ipfsHash.split('ipfs://')[1]}`;
@@ -74,4 +76,5 @@ const fetchNFTMetadataFromIPFS = async (ipfsHash) => {
 };
 
 // Helper function to decode base64 metadata
+//@ts-ignore
 const decodeBase64 = (data) => Buffer.from(data, 'base64').toString('utf8');

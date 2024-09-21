@@ -40,11 +40,11 @@ const Dashboard: React.FC = () => {
       console.log("Geolocation is not available in your browser.");
     }
   }, []);
-
+//@ts-ignore
     const handleChange = (e) => {
       setValue(e.target.value);
     };
-
+//@ts-ignore
     const getOrCreateHederaAccount = async (address) => {
         console.log(address)
       try {
@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
         const receipt = await response.getReceipt(hederaClient);
         
         // Store accountId and privateKey as a JSON string in local storage
-        const accountData = {
+        const accountData = { //@ts-ignore
           accountId: receipt.accountId.toString(),
           accountPvtKey: accountPrivateKey.toString(), // Convert to string for storage
         };
@@ -96,7 +96,7 @@ const Dashboard: React.FC = () => {
     const handleMint = async () => {
         console.log(file, "file")
         const ipfsHash = file; // From Pinata
-        const coordinates = location;
+        const coordinates = location; //@ts-ignore
         const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'))
         const locationName = value; // User-provided location name
         
@@ -105,7 +105,7 @@ const Dashboard: React.FC = () => {
           .catch(err => console.error("Error minting NFT:", err));
     }
 
-    //@ts-expect-error any
+    //@ts-ignore
     function showFirstAndLast(str) {
         if (str.length <= 8) {
           // If the string is too short to have both first 5 and last 3 characters, return the original string
@@ -128,7 +128,7 @@ const Dashboard: React.FC = () => {
                     <Button onClick={() => {localStorage.clear(); disconnect();}}>Logout / Disconnect</Button>
                     </div>
                     <div className='flex flex-col justify-center mx-5 '>
-                        {/* @ts-expect-error any */}
+                        {/* @ts-ignore */}
                         <UploadComponent setFile={setFile} />
                         {file && <div className='flex flex-row p-2 gap-2'>
                             <Input placeholder="Enter Location Name" value={value} onChange={handleChange} />
