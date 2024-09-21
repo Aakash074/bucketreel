@@ -10,6 +10,7 @@ import { AccountCreateTransaction, Hbar } from '@hashgraph/sdk';
 // import createFirstNft from './CreateNFT';
 import { mintNFT } from "./CreateNFT";
 import NFTDisplay from "./displayNFTs";
+import BucketList from './bucketlist';
 
 const Dashboard: React.FC = () => {
 
@@ -22,6 +23,7 @@ const Dashboard: React.FC = () => {
     const [value, setValue] = React.useState('');
 
     const [location, setLocation] = React.useState({ lat: 12.34, lon: 56.78 });
+    const [tab, setTab] = React.useState("home")
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -51,7 +53,7 @@ const Dashboard: React.FC = () => {
         const accountPrivateKey = address;
     
         const response = await new AccountCreateTransaction()
-          .setInitialBalance(new Hbar(1)) // Set initial balance to 5 Hbar
+          .setInitialBalance(new Hbar(5)) // Set initial balance to 5 Hbar
           .setKey(address)
           .execute(hederaClient);
         
@@ -120,9 +122,16 @@ const Dashboard: React.FC = () => {
 
     return (
         <div>
+          {address && <div className='flex flex-row fixed bottom-[10px] w-full justify-center items-center z-10'>
+            <div className={`flex flex-row  w-[80%] max-w-[400px] rounded-lg justify-evenly overflow-hidden cursor-pointer text-center`}>
+                    <div className={`text-2xl ${tab === "home" ? "bg-sky-600 text-white" : "bg-[#e2e2e2]"} w-[50%] h-full p-2`} onClick={() => setTab("home")}>Explore</div>
+                    <div className={`text-2xl ${tab === "bucket" ? "bg-sky-600 text-white" : "bg-[#e2e2e2]"} w-[50%] h-full p-2`}  onClick={() => setTab("bucket")}>Bucketlist</div>
+                    </div>
+                  </div>}
             {!address ? <div className='w-screen flex justify-center items-center'><ConnectButton /></div>
                 :
                 <div className='w-screen h-screen flex flex-col justify-start'>
+                  
                     <div className='flex flex-row justify-between w-full p-4'>
                     <h2 className=''> Welcome ${showFirstAndLast(address)}</h2>
                     <Button onClick={() => {localStorage.clear(); disconnect();}}>Logout / Disconnect</Button>
@@ -136,7 +145,7 @@ const Dashboard: React.FC = () => {
                         </div>}
                     </div>
                     <div className='flex flex-col justify-center items-center gap-4'>
-                        <NFTDisplay />
+                        {tab === "home" ? <NFTDisplay /> : <BucketList />}
                         {/* {images.map((image, index) => (
                             <Card key={index} style={{ width: 300 }}>
                                 <img src={image} alt={`Image ${index + 1}`} style={{ width: '100%' }} />

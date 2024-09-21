@@ -20,7 +20,7 @@ const getOrCreateHederaAccount = async () => {
     const accountPrivateKey = PrivateKey.generateED25519();
 
     const response = await new AccountCreateTransaction()
-      .setInitialBalance(new Hbar(1)) // Set initial balance to 5 Hbar
+      .setInitialBalance(new Hbar(5)) // Set initial balance to 5 Hbar
       .setKey(accountPrivateKey)
       .execute(client);
     
