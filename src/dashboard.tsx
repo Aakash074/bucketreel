@@ -133,7 +133,11 @@ const Dashboard: React.FC = () => {
                 <div className='w-screen h-screen flex flex-col justify-start'>
                   
                     <div className='flex flex-row justify-between w-full p-4'>
-                    <h2 className=''> Welcome ${showFirstAndLast(address)}</h2>
+                    <h2 className=''> Welcome { //@ts-ignore
+                          JSON.parse(localStorage.getItem('hederaAccountData'))?.accountId
+
+                    // showFirstAndLast(address)
+                    }</h2>
                     <Button onClick={() => {localStorage.clear(); disconnect();}}>Logout / Disconnect</Button>
                     </div>
                     <div className='flex flex-col justify-center mx-5 '>

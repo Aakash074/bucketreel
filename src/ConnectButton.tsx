@@ -7,6 +7,7 @@ import {
   AccountCreateTransaction,
   Hbar
 } from "@hashgraph/sdk";
+import LogoUrl from "./assets/logo.png";
 
 // Initialize your Hedera client
 const client = Client.forTestnet(); // @ts-ignore
@@ -66,6 +67,9 @@ export default function ConnectButton() {
   };
 
   return (
+    <div className="flex flex-col">
+    <img src={LogoUrl} alt="bucketreel" className="w-[360px]" />
     <Button onClick={handleConnect}>Login / Connect Wallet</Button>
+    </div>
   );
 }
