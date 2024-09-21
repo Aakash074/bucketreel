@@ -14,6 +14,7 @@ import BucketList from './bucketlist';
 import { Buffer } from "buffer";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';  // Import toastify CSS
+import { SearchOutlined, BookOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons'
 
 window.Buffer = window.Buffer || Buffer;
 
@@ -171,22 +172,32 @@ const Dashboard: React.FC = () => {
         <div className='bg-purple-50'>
           {address && <div className='flex flex-row fixed bottom-[20px] w-full justify-center items-center z-10'>
             <div className={`flex flex-row  w-[80%] max-w-[400px] rounded-lg justify-evenly overflow-hidden cursor-pointer text-center border-[1px] border-violet-600`}>
-                    <div className={`text-2xl ${tab === "home" ? "bg-violet-600 text-white" : "bg-white text-violet-600"} w-[50%] h-full p-2`} onClick={() => setTab("home")}>Explore</div>
-                    <div className={`text-2xl ${tab === "bucket" ? "bg-violet-600 text-white" : "bg-white text-violet-600"} w-[50%] h-full p-2`}  onClick={() => setTab("bucket")}>Bucketlist</div>
+                    <div className={`text-2xl flex flex-row items-center gap-2 justify-center ${tab === "home" ? "bg-violet-600 text-white" : "bg-white text-violet-600"} w-[50%] h-full p-2`} onClick={() => setTab("home")}>
+                    <SearchOutlined />
+                    <div>Explore</div></div>
+                    <div className={`text-2xl flex flex-row items-center gap-2 justify-center ${tab === "bucket" ? "bg-violet-600 text-white" : "bg-white text-violet-600"} w-[50%] h-full p-2`}  onClick={() => setTab("bucket")}>
+                    <BookOutlined />
+                    <div>Bucketlist</div>
+
+                    </div>
                     </div>
                   </div>}
                   <ToastContainer />
             {!address ? <div className='w-screen flex justify-center items-center bg-purple-50'><ConnectButton /></div>
                 :
                 <div className='w-screen h-screen flex flex-col justify-start bg-purple-50'>
-                  <div className='text-xl font-bold w-full text-center pt-4'>BucketReel</div>
+                  <div className='text-2xl font-bold w-full text-center pt-4'>BucketReel</div>
                     <div className='flex flex-row justify-between items-center w-full p-4'>
-                    <h2 className='font-bold'> Welcome { //@ts-ignore
+                    <h2 className='flex flex-row gap-2'>
+                    <UserOutlined />
+                    <div className='font-bold'>
+                       Welcome { //@ts-ignore
                           JSON.parse(localStorage.getItem('hederaAccountData'))?.accountId
 
                     // showFirstAndLast(address)
-                    }</h2>
-                    <Button className='border-[1px] border-violet-600' onClick={() => {localStorage.clear(); disconnect();}}>Logout / Disconnect</Button>
+                    }</div></h2>
+                    <Button className='border-[1px] border-violet-600 flex flex-row items-center justify-center gap-2' onClick={() => {localStorage.clear(); disconnect();}}>
+                    <LogoutOutlined /><div>Logout / Disconnect</div></Button>
                     </div>
                     <div className='flex flex-col justify-center mx-5 '>
                         {/* @ts-ignore */}
