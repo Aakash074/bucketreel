@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { fetchMintedNFTs } from './fetchNFTs'; // Import the function to fetch NFTs
 import { Button, Card } from 'antd'
+import { Client, ContractExecuteTransaction, ContractFunctionParameters, PrivateKey } from "@hashgraph/sdk";
+
+const contractId = "0.0.4887459"
 
 const NFTDisplay = () => {
   const [nfts, setNfts] = useState([]);
@@ -18,18 +21,23 @@ const NFTDisplay = () => {
     getNFTs();
   }, []);
 
-  // Function to handle "like" button click
-  const handleLike = async () => {
-    try {
-      // You would have an API that stores the like count
-    //   const response = await axios.post('/api/like', { tokenId });
+  // Function to handle "like" button click 
+  //@ts-ignore
+  async function addToBucketList(nftId) {
+    console.log(nftId);
+    const client = Client.forTestnet(); //@ts-ignore
+    const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'));
+    client.setOperator(userAccount?.accountId, PrivateKey.fromStringDer(userAccount?.accountPvtKey));
 
-      // Update like counts (this assumes the API returns the new like count)
-    //   setLikeCounts(prev => ({ ...prev, [tokenId]: likeCounts + 1 }));
-    } catch (error) {
-      console.error("Error liking NFT", error);
-    }
-  };
+    const transaction = new ContractExecuteTransaction()
+        .setContractId(contractId)
+        .setGas(100_000) // Set gas limit appropriately
+        .setFunction("addToBucketList", new ContractFunctionParameters().addString(nftId)); // Use addString instead of addUint256
+
+    const txResponse = await transaction.execute(client);
+    const receipt = await txResponse.getReceipt(client);
+    console.log(`Transaction status: ${receipt.status}`);
+}
 
   return (
     <div className='p-4'>
@@ -50,9 +58,9 @@ const NFTDisplay = () => {
             </div>
             <div className='w-[40%] flex flex-row-reverse'>
             {/* @ts-ignore */}
-            <Button onClick={() => handleLike(nft.tokenInfo?.token_id)}>
+            <Button onClick={() => addToBucketList(nft?.token_id)}>
             {/* @ts-ignore */}
-              Like ({likeCounts[nft?.tokenInfo?.token_id] || 0})
+              Add to Bucket
             </Button>
             </div>
             </div>
