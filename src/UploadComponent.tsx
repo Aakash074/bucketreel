@@ -68,7 +68,7 @@ const App: React.FC = ({ setFile }) => {
 
   return (
     <Upload {...props}>
-      <Button icon={<UploadOutlined />}>Add Location to Mint NFTs</Button>
+      <Button icon={<UploadOutlined />}>Add Location Photo / Video to Mint NFTs</Button>
     </Upload>
   );
 };

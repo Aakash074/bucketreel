@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
                         {/* @ts-expect-error any */}
                         <UploadComponent setFile={setFile} />
                         {file && <div className='flex flex-row p-2 gap-2'>
-                            <Input placeholder="Enter text" value={value} onChange={handleChange} />
+                            <Input placeholder="Enter Location Name" value={value} onChange={handleChange} />
                             <Button onClick={handleMint}>Mint</Button>
                         </div>}
                     </div>
