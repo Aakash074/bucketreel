@@ -92,7 +92,13 @@ export const mintNFT = async (ipfsHash, coordinates, userAccount, locationName) 
 
   // Dynamic token name and symbol based on user-provided location name
   const tokenName = `${locationName} NFT`;
-  const tokenSymbol = `${locationName?.toUpperCase()}`;
+  const tokenSymbol = `${locationName.split(' ') // Split the phrase into individual words
+    .map(word => {
+      // Keep the first character of the word and remove vowels from the rest
+      return word[0] + word.slice(1).replace(/[aeiouAEIOU]/g, '');
+    })
+    .join('') // Join the words back together without spaces
+    .toUpperCase()}`;
 
   // 1. Create NFT Collection
   const { tokenId } = await createNonFungibleToken(
@@ -182,6 +188,7 @@ const PINATA_SECRET_KEY = import.meta.env.VITE_PINATA_SECRET_KEY;
   const associateSubmit = await associateTxSigned.execute(client);
   const associateReceipt = await associateSubmit.getReceipt(client);
   console.log(`NFT Associated with User Account: ${userAccount.accountId}`, associateReceipt);
+  window.location.reload()
 };
 
 // Example usage

@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
         const ipfsHash = file; // From Pinata
         const coordinates = location;
         const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'))
-        const locationName = value + ' NFT'; // User-provided location name
+        const locationName = value; // User-provided location name
         
         mintNFT(ipfsHash, coordinates, userAccount, locationName)
           .then(() => console.log("NFT minting process completed."))

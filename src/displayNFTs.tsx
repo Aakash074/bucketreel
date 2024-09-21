@@ -33,13 +33,13 @@ const NFTDisplay = ({  }) => {
 
   return (
     <div className='p-4'>
-      <h2 className='text-md font-bold'>Minted NFTs</h2>
+      <h2 className='text-md font-bold'>Minted Location NFTs</h2>
       <div className="nft-list">
         {nfts.filter(nft => nft.metadata && nft.metadata?.attributes?.[0]?.trait_type).map(nft => (
           <Card key={nft.tokenInfo?.token_id} className="nft-card">
             
-            <img src={`https://peach-accused-eel-595.mypinata.cloud/ipfs/${nft.metadata?.image?.split('ipfs://')[1]}`} alt={nft.metadata?.name} style={{ width: '100%' }} />
-            <div className='flex flex-row justify-between items-center p-4'>
+            <img src={`https://peach-accused-eel-595.mypinata.cloud/ipfs/${nft.metadata?.image?.split('ipfs://')[1]}`} alt={nft.metadata?.name} className='rounded-md' style={{ width: '100%' }} />
+            <div className='flex flex-row justify-between items-center pt-4'>
             <div className='flex flex-col'>
                 <h3>{nft.metadata?.name}</h3>
                 <p>{nft.metadata?.description}</p>
