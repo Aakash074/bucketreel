@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from 'antd'
-import { Client, ContractCallQuery, ContractFunctionParameters, PrivateKey, AccountInfoQuery, AccountId } from "@hashgraph/sdk";
+import { Client, ContractCallQuery, ContractFunctionParameters, PrivateKey, AccountId } from "@hashgraph/sdk";
 import axios from 'axios';
 
 const contractId = "0.0.4887459"
@@ -12,7 +12,7 @@ const BucketList = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   async function getBucketList() {
-    const client = Client.forTestnet();
+    const client = Client.forTestnet(); //@ts-ignore
     const userAccount = JSON.parse(localStorage.getItem('hederaAccountData'));
 
     // Ensure accountId and privateKey exist in localStorage
@@ -89,13 +89,14 @@ const BucketList = () => {
               };
             })
           );
-    //   //@ts-ignore
+     //@ts-ignore
       setNfts(nftDetails);
     };
     
     getNFTs();
   }, []);
 
+  //@ts-ignore
   const fetchNFTMetadataFromIPFS = async (ipfsHash) => {
     try {
       const ipfsGatewayUrl = `https://peach-accused-eel-595.mypinata.cloud/ipfs/${ipfsHash.split('ipfs://')[1]}`;
